@@ -1,0 +1,104 @@
+@import "boot/less/variables.less";
+@import "boot/less/mixins/opacity.less";
+
+@nav-link-padding:                          3px 15px;
+
+.nav > li > a {
+  padding: 3px 15px 3px 15px;
+}
+
+.browsehappy {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+#spinner {
+  display: block;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+}
+
+#spinner #matte {
+  display: block;
+  background: #000000;
+  .opacity(.8);
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+#spinner #icon-sprite {
+  position: fixed;
+  display: block;
+  width: 68px;
+  height: 37px;
+  top: 50%;
+  left: 50%;
+  margin-left: -34px;
+  margin-right: -34px;
+  i {
+    color: #ffffff;
+    font-size: 48px;
+  }
+}
+
+.modal-body pre {
+  overflow: auto;
+  white-space: pre;
+  word-wrap: normal;
+}
+
+.left {
+  float: left;
+  width: 20em;
+  margin-right: 15px;
+}
+
+.right {
+  float: left;
+  width: 40em;
+}
+
+.table-header {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.header {
+  background: transparent url(/images/header_bg.jpg);
+}
+
+#logo {
+  float: left;
+}
+
+#site-slogan {
+    font-family: DejaVu Sans,FreeSans,Verdana,Comic Sans MS,sans-serif;
+    font-weight: bold;
+    color: #ffffff;
+    float: left;
+    font-size: 14px;
+    margin: 31px 0 0 5px;
+    max-width: 500px;
+}
+
+#header-bottom {
+  clear: both
+}
+
+#header-bottom > h3 {
+    color: #ffffff;
+}
+
+#header-bottom > ul > li {
+    background-color: #000000;
+    margin: 0;
+}

@@ -1,0 +1,5 @@
+flask
+requests
+Flask-SQLAlchemy
+Flask-Restless
+mysql-connector-python

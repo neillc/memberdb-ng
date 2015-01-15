@@ -1,0 +1,21 @@
+<div>
+  <table class="table table-bordered table-hover table-striped" st-table="images">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Size</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="image in images">
+        <td>
+          <button class="btn btn-link" ng-click="imageDetail(image)">
+            {{ image.name }}
+            <span class="fa fa-info-circle"></span>
+          </button>
+        </td>
+        <td>{{ image['OS-EXT-IMG-SIZE:size'] | humanFileSize }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

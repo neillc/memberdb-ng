@@ -1,0 +1,35 @@
+<div>
+  <table class="table table-bordered table-hover table-striped" st-table="flavors">
+    <thead>
+        <th>ID</th>
+        <th>Flavor</th>
+        <th>Memory MB</th>
+        <th>Swap</th>
+        <th>Disk</th>
+        <th>VCPUs</th>
+        <th>Ephemeral</th>
+        <th>Disabled?</th>
+        <th>RXTX Factor</th>
+        <th>Public?</th>
+    </thead>
+    <tbody>
+        <tr ng-repeat="flavor in flavors">
+            <td>{{ flavor.id }}</td>
+            <td>
+              <button class="btn btn-link" ng-click="flavorDetail(flavor)">
+                {{ flavor.name }}
+                <span class="fa fa-info-circle"></span>
+              </button>
+            </td>
+            <td>{{ flavor.ram }}</td>
+            <td>{{ flavor.swap }}</td>
+            <td>{{ flavor.disk }}</td>
+            <td>{{ flavor.vcpus }}</td>
+            <td>{{ flavor['OS-FLV-EXT-DATA:ephemeral'] }}</td>
+            <td x-checkmark="flavor['OS-FLV-DISABLED:disabled']"></td>
+            <td>{{ flavor.rxtx_factor }}</td>
+            <td x-checkmark="flavor['os-flavor-access:is_public']"></td>
+        </tr>
+    </tbody>
+  </table>
+</div>

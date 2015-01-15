@@ -1,0 +1,28 @@
+<div class="jumbotron">
+  <h1>Membership List</h1>
+  <p class="lead">
+    List of members here
+  </p>
+  <table st-table="data.objects" class="table table-striped">
+    <thead>
+      <tr>
+       <th>Id</th>
+       <th>First Name</th>
+       <th>Last Name</th>
+       <th>Email</th>
+     </tr>
+   </thead>
+   <tbody>
+     <tr ng-repeat="member in data.objects">
+      <td>{{member.id}}</td>
+      <td>{{member.first_name}}</td>
+      <td>{{member.last_name}}</td>
+      <td>{{member.email}}</td>
+     </tr>
+   </tbody>
+  </table>
+  Page {{data.page}} of {{data.total_pages}}
+</div>
+
+<div class="row marketing">
+</div>
