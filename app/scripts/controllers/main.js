@@ -15,3 +15,14 @@ angular.module('memberdbApp')
       'Karma'
     ];
   });
+  
+  var app = angular.module('memberdbApp');
+
+  app.run(function (menuService, apiService) {
+    var menu = {
+      'title': 'Login',
+      'action': '#/login',
+    };
+
+    menuService.push(menu);
+  });

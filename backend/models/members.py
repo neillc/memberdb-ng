@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Date, DateTime, CHAR, PrimaryKeyConstraint, ForeignKey
 from backend import app
 
-Mapped_Members = app.Base.classes.members
+Mapped_Members = app.base.classes.members
 
 class Members(app.Decl_Base):
     __tablename__ = 'members'

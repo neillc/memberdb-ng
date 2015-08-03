@@ -41,15 +41,13 @@ def base_app():
     app.config.overrides = {}
 
     logging.info('Connecting to database...')
-    conn_str = 'mysql+mysqlconnector://neill:secret1234@127.0.0.1/memberdb'
     engine = create_engine(backend.settings.db_connection)
-    print(engine)
     app.engine = engine
-    Base = automap_base()
-    Base.prepare(engine, reflect=True)
+    base = automap_base()
+    base.prepare(engine, reflect=True)
 
     session = Session(engine)
-    app.Base = Base
+    app.base = base
     app.session = session
     app.Decl_Base = declarative_base()
     
@@ -58,7 +56,7 @@ def base_app():
 
     # Create the Flask-Restless API manager.
     app.api_manager = flask.ext.restless.APIManager(app, session=app.session)
-    #manager.create_api(app.Members, methods=['GET', 'POST', 'PATCH', 'DELETE'], collection_name='members')
+    app.api_manager.create_api(Members, methods=['GET', 'POST', 'PATCH', 'DELETE'], collection_name='members')
 
     return app
 
@@ -144,6 +142,7 @@ def delay_response(delay):
         if request.path.lower().startswith(''):
             logging.info('Delaying response by %s seconds', delay)
             time.sleep(delay)
+
 
 def main():  # pragma: no cover
     parser = argparse.ArgumentParser(description='memberdb webapp')

@@ -5,6 +5,13 @@ AngularJS
 This readme (and a significant amount of scaffolding) was originally copied 
 from r1chardj0n3s' angboard application - https://github.com/r1chardj0n3s/angboard
 
+At this point most of this README is irrelevant. The only part of this app that is
+currently working is an automatically generated REST api.
+
+See for example http://127.0.0.1:8531/api/members/
+
+Eventually there will be angularish and/or flask front end bits
+
 Installation
 ============
 

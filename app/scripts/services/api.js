@@ -56,9 +56,9 @@ limitations under the License.
    * # api
    * Service in the memberdbApp.
    */
-  angular.module('memberdbApp')
+  var app = angular.module('memberdbApp');
 
-    .config(function (localStorageServiceProvider, $httpProvider) {
+  app.config(function (localStorageServiceProvider, $httpProvider) {
       localStorageServiceProvider.setPrefix('memberdbApp');
 
       $httpProvider.defaults.transformResponse.push(function (responseData) {
@@ -67,7 +67,7 @@ limitations under the License.
       });
     })
 
-    .service('apiService',
+  app.service('apiService',
       function (alertService, $http, $log, $location, localStorageService,
           $cookieStore) {
         var self = this;

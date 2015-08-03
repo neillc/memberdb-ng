@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2014,  Neill Cox
+# Copyright 2014, Rackspace, US, Inc, Neill Cox
 #
 # This file is part of memberdb.
 #
