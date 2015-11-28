@@ -1,0 +1,67 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Admin - Members - List</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Date Entered</th>
+      <th>First Name</th>
+      <th>Middle Name</th>
+      <th>Last Name</th>
+      <th>DoB</th>
+      <th>Sex</th>
+      <th>Address 1</th>
+      <th>Address 2</th>
+      <th>Suburb</th>
+      <th>Postcode</th>
+      <th>State</th>
+      <th>Country</th>
+      <th>Email</th>
+      <th>Home Phone</th>
+      <th>Mobile Phone</th>
+      <th>Country</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for member in members.items %}
+    <tr>
+      <td>{{ member.id }}</td>
+      <td>{{ member.date_entered }}</td>
+      <td>{{ member.first_name }}</td>
+      <td>{{ member.middle_name }}</td>
+      <td>{{ member.last_name }}</td>
+      <td>{{ member.dob }}</td>
+      <td>{{ member.sex }}</td>
+      <td>{{ member.address1 }}</td>
+      <td>{{ member.address2 }}</td>
+      <td>{{ member.suburb }}</td>
+      <td>{{ member.postcode }}</td>
+      <td>{{ member.state }}</td>
+      <td>{{ member.country }}</td>
+      <td>{{ member.email }}</td>
+      <td>{{ member.home_phone }}</td>
+      <td>{{ member.mobile_phone }}</td>
+      <td>{{ member.country }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class=pagination>
+  {%- for page in members.iter_pages(left_current=10, right_current=10) %}
+    {% if page %}
+      {% if page != members.page %}
+        <a href="{{ url_for('list_members', page=page) }}">{{ page }}</a>
+      {% else %}
+        <strong>{{ page }}</strong>
+      {% endif %}
+    {% else %}
+      <span class=ellipsis>…</span>
+    {% endif %}
+  {%- endfor %}
+</div>
+
+{% endblock %}

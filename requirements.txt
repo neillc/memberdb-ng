@@ -2,4 +2,6 @@ flask
 requests
 Flask-SQLAlchemy
 Flask-Restless
+Flask-WTF
 mysql-connector-python
+Flask-Admin

@@ -1,0 +1,65 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Admin - Organisations - List</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Founded</th>
+      <th>Closed</th>
+      <th>Address 1</th>
+      <th>Address 2</th>
+      <th>Suburb</th>
+      <th>Postcode</th>
+      <th>State</th>
+      <th>Country</th>
+      <th>Website</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Fax</th>
+      <th>Mobile</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for organisation in organisations.items %}
+    <tr>
+      <td>{{organisation.id}}</td>
+      <td>{{organisation.name}}</td>
+      <td>{{organisation.founded}}</td>
+      <td>{{organisation.closed}}</td>
+      <td>{{organisation.address1}}</td>
+      <td>{{organisation.address2}}</td>
+      <td>{{organisation.suburb}}</td>
+      <td>{{organisation.postcod}}</td>
+      <td>{{organisation.state}}</td>
+      <td>{{organisation.country}}</td>
+      <td>{{organisation.website}}</td>
+      <td>{{organisation.email}}</td>
+      <td>{{organisation.phone}}</td>
+      <td>{{organisation.fax}}</td>
+      <td>{{organisation.mobile}}</td>
+      <td>{{organisation.description}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class=pagination>
+  {%- for page in organisations.iter_pages(left_current=10, right_current=10) %}
+    {% if page %}
+      {% if page != organisations.page %}
+        <a href="{{ url_for('list_orgs', page=page) }}">{{ page }}</a>
+      {% else %}
+        <strong>{{ page }}</strong>
+      {% endif %}
+    {% else %}
+      <span class=ellipsis>…</span>
+    {% endif %}
+  {%- endfor %}
+</div>
+
+{% endblock %}

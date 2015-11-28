@@ -17,88 +17,126 @@
 # You should have received a copy of the GNU General Public License
 # along with memberdb.  If not, see <http://www.gnu.org/licenses/>.
 
-import functools
 import logging
-import time
 import argparse
+import os
+from flask import Flask, render_template, redirect, url_for, request, flash
 
-from flask import Flask
 import flask.ext.restless
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
-import backend.settings
+from flask.ext.login import (
+    login_required,
+    login_user,
+    LoginManager,
+    logout_user,
+    UserMixin
+    )
+
+from flask_sqlalchemy import SQLAlchemy
+
 
 ALL_HTTP_METHODS = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 
-app = None
+app = Flask('backend')
+db = None
+admin = None
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+class UserNotFoundError(Exception):
+    pass
+
+
+class User(UserMixin):
+    # Later we will talk to a database
+    user_database = {
+        "Neill": "Password",
+        "SteveH": "1234",
+        "SteveW": "Bacon"
+    }
+
+    def __init__(self, userid):
+        if userid not in self.user_database:
+            raise UserNotFoundError()
+
+        self.id = userid
+        self.password = self.user_database[userid]
+
+    @classmethod
+    def get(cls, user_id):
+        try:
+            return cls(user_id)
+        except UserNotFoundError:
+            return None
+
+
+@login_manager.user_loader
+def load_user(id):
+    return User.get(id)
+
 
 def base_app():
-    global app
-    app = Flask('backend')
-    app.config.overrides = {}
+    global app, db, admin
+    app.config.from_object('backend.settings')
+    db = SQLAlchemy(app)
 
-    logging.info('Connecting to database...')
-    engine = create_engine(backend.settings.db_connection)
-    app.engine = engine
-    base = automap_base()
-    base.prepare(engine, reflect=True)
+    if 'MEMBERDB_SETTINGS' in os.environ:
+        app.config.from_envvar('MEMBERDB_SETTINGS')
 
-    session = Session(engine)
-    app.base = base
-    app.session = session
-    app.Decl_Base = declarative_base()
-    
     from backend.models import Members
-    app.Decl_Base.metadata.create_all(app.engine)
-
     # Create the Flask-Restless API manager.
-    app.api_manager = flask.ext.restless.APIManager(app, session=app.session)
-    app.api_manager.create_api(Members, methods=['GET', 'POST', 'PATCH', 'DELETE'], collection_name='members')
+    app.api_manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
+    app.api_manager.create_api(
+        Members,
+        methods=['GET', 'POST', 'PATCH', 'DELETE'],
+        collection_name='members')
 
-    return app
-
-    @app.route("/shutdown", methods=["POST"])   # pragma: no cover
-    def shutdown():  # pragma: no cover
-        logging.info('shutting down server')
-        shutdown_server()
-        return "server shutting down"
-
-
-
-def abort_app():
-    """
-    Return error 500 on all requests 
-    """
-    app = base_app()
-    app.config.status_code = 500
-
-    def e500(path):
-        abort(app.config.status_code)
-    app.route('/', methods=ALL_HTTP_METHODS)(e500)
+    admin = create_admin_views(app)
     return app
 
 
-def garbage_app():
-    """
-    Return OK but with garbage content to /
-    """
-    app = base_app()
+def create_admin_views(app):
+    admin = Admin(app, name='MemberDBNG', template_mode='bootstrap3')
 
-    def garbage(path):
-        return Response("garbage response to %s" % path, status=200,
-                        content_type='application/json')
-    app.route('/', methods=ALL_HTTP_METHODS)(garbage)
-    return app
+    for model in [
+        models.Activities,
+        models.Election,
+        models.ElectionCandidate,
+        models.ElectionCandidateNomination,
+        models.ElectionPosition,
+        models.ElectionVote,
+        models.Events,
+        models.EventHostOrgs,
+        models.EventOrganisers,
+        models.EventSignup,
+        models.EventSignupStatus,
+        models.EventTypes,
+        models.GroupMembers,
+        models.Groups,
+        models.Log,
+        models.Members,
+        models.MemberTypes,
+        models.members.MemberQualifications,
+        models.Organisation,
+        models.OrganisationOrganisationTypes,
+        models.OrganisationRelationships,
+        models.OrganisationRelationTypes,
+        models.OrganisationTypes,
+        models.members.OrgMembers,
+        models.Passwd,
+        models.Permissions,
+        models.Positions,
+        models.PositionsHeld,
+        models.SystemMessages,
+        models.Token,
+    ]:
+        admin.add_view(ModelView(model, db.session))
 
-
-def shutdown_server():   # pragma: no cover
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
+    return admin
 
 
 def setup_logging(filename):    # pragma: no cover
@@ -110,58 +148,38 @@ def setup_logging(filename):    # pragma: no cover
         print('Logging to %s' % filename)
 
 
-def foreground_runner(app, *args, **kwargs):    # pragma: no cover
-    # snippet for debugging w/ wingIDE:
-    if __debug__:
-        from os import environ
-        if 'WINGDB_ACTIVE' in environ:
-            app.debug = False
-
-    app.run(*args, **kwargs)
+@app.route("/")
+def index():
+    return render_template('index.html')
 
 
-def background_runner(app, *args, **kwargs):    # pragma: no cover
-    kwargs["use_reloader"] = False
-
-    # snippet for debugging w/ wingIDE:
-    if __debug__:
-        from os import environ
-        if 'WINGDB_ACTIVE' in environ:
-            kwargs["debug"] = False
-    else:
-        kwargs["debug"] = True
-    process = Thread(target=app.run, args=args, kwargs=kwargs,
-            daemon=False)
-    process.start()
-    import ipdb
-    ipdb.set_trace()
+# @app.route("/login", methods=["POST"])
+# def login():
+#     user = User.get(request.form['user'])
+#     if user and user.password == request.form['password']:
+#         login_user(user)
+#     else:
+#         flash('Username or password incorrect')
+#
+#     return redirect(url_for('index'))
 
 
-def delay_response(delay):
-    if has_request_context():
-        if request.path.lower().startswith(''):
-            logging.info('Delaying response by %s seconds', delay)
-            time.sleep(delay)
+@app.route("/edit")
+@login_required
+def edit():
+    return 'You can edit your details here'
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return "You have been logged out"
 
 
 def main():  # pragma: no cover
+    global app
+
     parser = argparse.ArgumentParser(description='memberdb webapp')
-    backend_target_group = parser.add_mutually_exclusive_group()
-    backend_target_group.add_argument(
-        '--ipdb', action='store_true',
-        help='Execute in the background and start ipdb')
-    backend_target_group.add_argument(
-        '--simulator', action='store_true',
-        help='Run against the simulator')
-    backend_target_group.add_argument(
-        '--abort500', action='store_true',
-        help='Run against an stack that aborts with 500')
-    backend_target_group.add_argument(
-        '--garbage', action='store_true',
-        help='Run against a stack that returns 200 but garbage content')
-    parser.add_argument(
-        '--delay', metavar='n', type=int, default=0,
-        help='Seconds to wait before processing each request')
     parser.add_argument(
         '--port', '-P', type=int, default=8531,
         help='Port to serve the backend on')
@@ -174,41 +192,19 @@ def main():  # pragma: no cover
     parser.set_defaults(simulator=True)
     args = parser.parse_args()
 
-    runner = foreground_runner
-    if args.ipdb:
-        runner = background_runner
-
     runner_kw = {
         'host': args.host,
         'port': args.port,
         'debug': True,
-        'host': '0.0.0.0'
     }
-
-    if __debug__:
-        from os import environ
-        if 'WINGDB_ACTIVE' in environ:
-            runner_kw["debug"] = False
 
     setup_logging(args.log)
 
-    if args.abort500:
-        logging.info("Backend will return 500 on every call")
-        app = abort_app()
-    elif args.garbage:
-        logging.info("Backend returns ok but garbage content on every call")
-        app = garbage_app()
-    else:
-        logging.info("Using real backend")
-        app = base_app()
-
-    if args.delay > 0:
-        logging.info("Delaying by %s seconds prior to response" % args.delay)
-        runner_kw['threaded'] = True
-        app.before_request(functools.partial(delay_response, args.delay))
+    app = base_app()
 
     import backend.views
-    runner(app=app, **runner_kw)
+
+    app.run(**runner_kw)
 
 
 
