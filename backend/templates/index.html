@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="heading">
+  <h1>Linux Australia Membership Database</h1>
+</div>
+<div class="container">
+  <div class="menu">
+    <ul class="menu">
+      <li><a href="/">Membership Home</a></li>
+      <li>Membership
+        <ul>
+          <li><a href="/signup">Sign-up</a></li>
+        </ul>
+      </li>
+    </ul>
+    <div class="login">
+      <h2>Login</h2>
+      <form action="/login" method="post" id="login">
+        <input type="hidden" id="function" name="function" value="login">
+        <p class="field">
+          <label for="user">
+            Email Address <span class="mandatory">*</span>
+          </label>
+          <input type="text" id="user" name="user" value="">
+        </p>
+        <p class="field">
+          <label for="password">
+            Password <span class="mandatory">*</span>
+          </label>
+          <input type="password" id="password" name="password" value="">
+        </p>
+        <a href="/recover-password">Forgot your password?</a>
+        <p class="submit">
+          <input type="submit" name="login" value="Login">
+        </p>
+      </form>
+    </div>
+  </div> <!-- menu -->
+  <div class="body"><h2>Memberships are open!</h2>
+    <p>
+      Click the Signup link to become a member of Linux Australia - it's free.
+    </p>
+  </div>
+
+  <div class="copyright">
+    <hr>
+    <p>
+      Site Contents ©2015
+      <a href="http://www.linux.org.au">Linux Australia, Inc.</a>.
+    </p>
+  </div>
+</div>
+{% endblock %}

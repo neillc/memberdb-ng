@@ -1,66 +1,96 @@
--- event_types table
--- -----------------
--- there are many types of events
-create table event_types (
-        id integer auto_increment not null,
-        type varchar(50),
-        CONSTRAINT "event_types_pkey" PRIMARY KEY (id)
-);
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
+from backend import db
 
 
--- events table
--- ------------
--- events are stored in the system independantly of orgs
--- events have host orgs, listed in the event_host_orgs table
--- this is how we work out who is hosting an event/running it.
---
--- we also track organisers of events and a few other little
--- useful bits of information. Most info should be on the event
--- page though.
-create table events (
-        id integer auto_increment not null,
-        event_type_id integer not null,
-        name varchar(80) not null,
-        description text,
-        start_datetime datetime NOT NULL,
-        end_datetime datetime NOT NULL,
-        url varchar(255) default NULL,
-        cost varchar(100),
-        CONSTRAINT "events_pkey" PRIMARY KEY (id),
-        CONSTRAINT "events_event_type_id_fkey" FOREIGN KEY (event_type_id) references event_types(id) on update restrict
-);
+class EventTypes(db.Model):
+    """"
+    # -- event_types table
+    # -- -----------------
+    # -- there are many types of events
+    # create table event_types (
+    #         id integer auto_increment not null,
+    #         type varchar(50),
+    #         CONSTRAINT "event_types_pkey" PRIMARY KEY (id)
+    # );
+    #
+    #
+    """
+
+    __tablename__ = 'event_types'
+
+    id = Column(Integer, nullable=False, primary_key=True)
+    type = Column(String(50), nullable=False)
 
 
-create table event_host_orgs (
-        event_id int not null,
-        org_id int not null,
-        rank int,
-        CONSTRAINT "event_host_orgs_pkey" PRIMARY KEY (event_id,org_id),
-        CONSTRAINT "event_host_orgs_event_id_fkey" FOREIGN KEY (event_id) references events(id) on update restrict,
-        CONSTRAINT "event_host_orgs_org_id_fkey" FOREIGN KEY (org_id) references orgs(id) on update restrict
-);
+class EventHostOrgs(db.Model):
+    __tablename__ = 'event_host_orgs'
 
-create table event_organisers (
-        event_id int not null,
-        member_id int not null,
-        role varchar(50),
-        CONSTRAINT "event_organisers_event_id_fkey" FOREIGN KEY (event_id) references events(id) on update restrict,
-        CONSTRAINT "event_organisers_member_id_fkey" FOREIGN KEY (member_id) references members(id) on update restrict
-);
+    event_id = Column(
+        Integer, ForeignKey('events.id'), nullable=False, primary_key=True
+    )
+    org_id = Column(
+        Integer, ForeignKey('orgs.id'), nullable=False, primary_key=True
+    )
+    rank = Column(Integer)
 
-create table event_signup_status (
-        id integer auto_increment not null,
-        event_id int default NULL,
-        status varchar(50) not null default '',
-        CONSTRAINT "event_signup_status_pkey" PRIMARY KEY (id)
-);
 
-create table event_signup (
-        event_id int not null,
-        member_id int not null,
-        event_signup_status_id int not null,
-        ticket int default NULL,
-        CONSTRAINT "event_signup_event_id_fkey" FOREIGN KEY (event_id) references events(id) on update restrict,
-        CONSTRAINT "event_signup_member_id_fkey" FOREIGN KEY (member_id) references members(id) on update restrict,
-        CONSTRAINT "event_signup_event_signup_status_id_fkey" FOREIGN KEY (event_signup_status_id) references event_signup_status(id) on update restrict
-);
+class EventOrganisers(db.Model):
+    __tablename__ = 'event_organisers'
+
+    event_id = Column(
+        Integer, ForeignKey('events.id'), nullable=False, primary_key=True
+    )
+    member_id = Column(
+        Integer, ForeignKey('members.id'), nullable=False, primary_key=True
+    )
+    role = Column(String(50))
+
+
+class EventSignupStatus(db.Model):
+    __tablename__ = 'event_signup_status'
+
+    id = Column(Integer, nullable=False, primary_key=True)
+    event_id = Column(Integer, ForeignKey('events.id'), nullable=False)
+    status = Column(String(50), nullable=False)
+
+
+class EventSignup(db.Model):
+    __tablename__ = 'event_signup'
+
+    event_id = Column(
+        Integer, ForeignKey('events.id'), nullable=False, primary_key=True
+    )
+    member_id = Column(
+        Integer, ForeignKey('members.id'), nullable=False, primary_key=True
+    )
+    event_signup_status_id = Column(
+        Integer, ForeignKey('event_signup_status.id'), nullable=False,
+        primary_key=True
+    )
+    ticket = Column(Integer)
+
+
+class Events(db.Model):
+    """
+        # -- events table
+        # -- ------------
+        # -- events are stored in the system independantly of orgs
+        # -- events have host orgs, listed in the event_host_orgs table
+        # -- this is how we work out who is hosting an event/running it.
+        # --
+        # -- we also track organisers of events and a few other little
+        # -- useful bits of information. Most info should be on the event
+        # -- page though.
+    """
+    __tablename__ = 'events'
+
+    id = Column(Integer, nullable=False, primary_key=True)
+    event_type_id = Column(
+        Integer, ForeignKey('event_types.id'), nullable=False
+    )
+    name = Column(String(80), nullable=False)
+    description = Column(Text)
+    start_datetime = Column(DateTime, nullable=False)
+    end_datetime = Column(DateTime, nullable=False)
+    url = Column(String(255))
+    cost = Column(String(100))

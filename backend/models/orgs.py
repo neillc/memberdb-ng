@@ -1,7 +1,8 @@
 from sqlalchemy import Column, Integer, String, Date, DateTime, CHAR, Text, ForeignKey, PrimaryKeyConstraint
-from backend import app
+from backend import db
 
-class Organisation_Types(app.Decl_Base):
+
+class OrganisationTypes(db.Model):
     """
     org_types table
     ---------------
@@ -15,8 +16,15 @@ class Organisation_Types(app.Decl_Base):
     name = Column(String(50))
     description = Text
 
+    def __repr__(self):
+        return "{name}({id}: {description}".format(
+            id=self.id,
+            name=self.name,
+            description=self.description
+        )
 
-class Organisation(app.Decl_Base):
+
+class Organisation(db.Model):
     """ 
     orgs table
     ----------
@@ -47,7 +55,7 @@ class Organisation(app.Decl_Base):
     address1 = Column(String(100))
     address2 = Column(String(100))
     suburb = Column(String(50))
-    postcod = Column(String(10))
+    postcode = Column(String(10))
     state = Column(String(50))
     country = Column(String(50), default='Australia')
     website = Column(String(100))
@@ -57,7 +65,8 @@ class Organisation(app.Decl_Base):
     mobile = Column(String(50))
     description = Column(Text)
 
-class OrganisationOrganisationTypes(app.Decl_Base):
+
+class OrganisationOrganisationTypes(db.Model):
     """
     org_org_types
     -------------
@@ -68,7 +77,8 @@ class OrganisationOrganisationTypes(app.Decl_Base):
     org_id = Column(Integer, ForeignKey('orgs.id'))
     org_type_id = Column(Integer, ForeignKey('org_types.id'))
    
-class OrganisationRelationTypes(app.Decl_Base):
+
+class OrganisationRelationTypes(db.Model):
     """
     -- Organization Relation (Types)
     -- -----------------------------
@@ -84,8 +94,9 @@ class OrganisationRelationTypes(app.Decl_Base):
     org_id = Column(Integer, ForeignKey('orgs.id'), nullable=False)
     type = Column(String(50), nullable=False)
     description = Column(Text)
-    
-class OrganisationRelationships(app.Decl_Base):
+
+
+class OrganisationRelationships(db.Model):
     """
     -- and the actual relations are stored here
     -- the lookup on the relation_type should be done on the org_id

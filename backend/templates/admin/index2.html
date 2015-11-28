@@ -1,0 +1,12 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Admin - </h1>
+
+<ul>
+  <li><a href="{{url_for('list_members')}}">Members</a></li>
+  <li><a href="{{url_for('list_organisations')}}">Organisations</a></li>
+</ul>
+
+{% endblock %}

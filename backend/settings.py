@@ -17,7 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with memberdb.  If not, see <http://www.gnu.org/licenses/>.
 
-db_connection = 'mysql+mysqlconnector://neill:secret1234@127.0.0.1/memberdb'
-port = 8531
+SQLALCHEMY_DATABASE_URI = \
+    'mysql+mysqlconnector://neill:secret1234@127.0.0.1/memberdb'
+SECRET_KEY = 'asjkdh2i4x xHKLJQ3BF4P9H'
+PORT = 8531
 debug = True,
-host = '0.0.0.0'
+HOST = '127.0.0.1'
+
+WTF_CSRF_ENABLED = True
+
