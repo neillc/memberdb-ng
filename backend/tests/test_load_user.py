@@ -5,7 +5,7 @@ class TestLoadUser(TestCase):
     def test_find_user(self):
         from backend import load_user
 
-        user = load_user('Neill')
+        user = load_user('Neill', 'password')
         self.assertIsNotNone(user)
         self.assertEqual(user.password, "Password")
 

@@ -1,53 +1,70 @@
 {% extends "layout.html" %}
-{% block body %}
-<div class="heading">
-  <h1>Linux Australia Membership Database</h1>
-</div>
-<div class="container">
-  <div class="menu">
-    <ul class="menu">
-      <li><a href="/">Membership Home</a></li>
-      <li>Membership
-        <ul>
-          <li><a href="/signup">Sign-up</a></li>
-        </ul>
-      </li>
-    </ul>
-    <div class="login">
-      <h2>Login</h2>
-      <form action="/login" method="post" id="login">
-        <input type="hidden" id="function" name="function" value="login">
-        <p class="field">
-          <label for="user">
-            Email Address <span class="mandatory">*</span>
-          </label>
-          <input type="text" id="user" name="user" value="">
-        </p>
-        <p class="field">
-          <label for="password">
-            Password <span class="mandatory">*</span>
-          </label>
-          <input type="password" id="password" name="password" value="">
-        </p>
-        <a href="/recover-password">Forgot your password?</a>
-        <p class="submit">
-          <input type="submit" name="login" value="Login">
-        </p>
-      </form>
-    </div>
-  </div> <!-- menu -->
-  <div class="body"><h2>Memberships are open!</h2>
+{% block content %}
+
+  <div class="jumbotron">
+    <h1>Welcome</h1>
+    <p class="lead">
+      Welcome to the Linux Australia Membership Database. If you are not already
+      a member please click the signup link to join, membership is free and open
+      to all!
+    </p>
     <p>
-      Click the Signup link to become a member of Linux Australia - it's free.
+      <a class="btn btn-lg btn-success" href="/signup" role="button">
+        Sign up today
+      </a>
     </p>
   </div>
 
-  <div class="copyright">
-    <hr>
-    <p>
-      Site Contents ©2015
-      <a href="http://www.linux.org.au">Linux Australia, Inc.</a>.
-    </p>
+  <div class="row marketing">
+    <div class="col-lg-6">
+      <h4>About Linux Australia</h4>
+      <p>
+        Linux Australia is the peak body for Open Source communities in
+        Australia. Linux Australia represents approximately 5000 Australian
+        users and developers of Free Software and Open Technologies, and
+        facilitates internationally-renowned events including linux.conf.au
+        -- Australasia's grassroots Free and Open Source Software Conference.
+      </p>
+
+      <h4>Values</h4>
+      <p>
+        Linux Australia is voluntarily bound by the principles embodied by its
+        <a href="https://www.linux.org.au/values">statement of values</a> and
+        the articles of association, and undertakes to operate at all times in
+        an open, transparent and democratic manner.
+      </p>
+
+      <h4>Members</h4>
+      <p>
+        Members of Linux Australia participate in sub-committees and special
+        interest groups, organise events or stand for election to the Linux
+        Australia <a href="https://www.linux.org.au/council">council</a>.
+      </p>
+    </div>
+
+    <div class="col-lg-6">
+      <h4>linux.conf.au</h4>
+      <p>
+        Linux Australia facilitates the organisation of
+        <a href="httpw://www.linux.org.au/LCA">linux.conf.au</a>, a premier
+        international Linux conference, in a different Australasian city each
+        year.
+      </p>
+
+      <h4>Conferences</h4>
+      <p>
+        Linux Australia assists with the organisation of
+        <a href="https://www.linux.org.au/calendar">associated open source
+        conferences</a>.
+      </p>
+
+      <h4>Projects</h4>
+      <p>
+        More information on some of the projects undertaken by Linux Australia
+        can be found on the
+        <a href="https://www.linux.org.au/our-projects">projects</a> page.
+      </p>
+    </div>
   </div>
-</div>
+
 {% endblock %}

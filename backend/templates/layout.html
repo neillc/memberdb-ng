@@ -5,9 +5,49 @@
     <title>Linux Australia Membership Database</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="static/global.css">
+    <!--<link rel="stylesheet" href="static/global.css">-->
+    <!-- Latest compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+      crossorigin="anonymous"
+    >
+
+    <!-- Optional theme -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+      integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+      crossorigin="anonymous"
+    >
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+      integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+      crossorigin="anonymous">
+    </script>
   </head>
 <body>
+<div class="container">
+  <div class="header clearfix">
+    <nav>
+      <ul class="nav nav-pills pull-right">
+        <li role="presentation" class="active"><a href="/">Home</a></li>
+        <li role="presentation">
+          <a href="https://www.linux.org.au/about">About</a>
+        </li>
+        <li role="presentation">
+          <a href="https://www.linux.org.au/contact">Contact</a>
+        </li>
+        <li role="presentation"><a href="/login">Login</a></li>
+        <li role="presentation"><a href="/signup">Signup</a></li>
+      </ul>
+    </nav>
+    <h3 class="text-muted">Linux Australia Membership Database</h3>
+  </div>
+
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     <ul class=flashes>
@@ -17,6 +57,20 @@
     </ul>
   {% endif %}
 {% endwith %}
-{% block body %}{% endblock %}
+{% block content %}{% endblock %}
+  <footer class="footer">
+    <p>
+      &copy; 2015
+      <a href="http://www.linux.org.au">
+        Linux Australia
+      </a>
+    </p>
+  </footer>
+</div> <!-- /container -->
+
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<!--<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>-->
+
 </body>
 </html>

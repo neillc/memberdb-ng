@@ -1,8 +1,9 @@
 <!-- extend from base layout -->
-{% extends "base.html" %}
+{% extends "layout.html" %}
 
 {% block content %}
-<h1>Sign In</h1>
+<div class="jumbotron">
+<h1>Log In</h1>
 <form action="" method="post" name="login">
   {{ form.hidden_tag() }}
   <p>
@@ -23,4 +24,5 @@
 
   <p><input type="submit" value="Sign In"></p>
 </form>
+  </div>
 {% endblock %}

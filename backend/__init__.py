@@ -20,9 +20,8 @@
 import logging
 import argparse
 import os
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template  # , redirect, url_for, request, flash
 
-import flask.ext.restless
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
@@ -35,6 +34,7 @@ from flask.ext.login import (
     )
 
 from flask_sqlalchemy import SQLAlchemy
+# import backend.models
 
 
 ALL_HTTP_METHODS = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS']
@@ -52,19 +52,23 @@ class UserNotFoundError(Exception):
 
 
 class User(UserMixin):
-    # Later we will talk to a database
-    user_database = {
-        "Neill": "Password",
-        "SteveH": "1234",
-        "SteveW": "Bacon"
-    }
 
-    def __init__(self, userid):
-        if userid not in self.user_database:
-            raise UserNotFoundError()
+    def __init__(self, user_id):
+        from backend.models.members import Members
+        from sqlalchemy.orm.exc import NoResultFound
 
-        self.id = userid
-        self.password = self.user_database[userid]
+        self.id = None
+        self.email = None
+
+        try:
+            member = Members.query.filter_by(id=user_id).one()
+            self.id = member.id
+            self.email = member.email
+        except NoResultFound:
+            pass
+
+    def get_id(self):
+        return self.id
 
     @classmethod
     def get(cls, user_id):
@@ -75,8 +79,8 @@ class User(UserMixin):
 
 
 @login_manager.user_loader
-def load_user(id):
-    return User.get(id)
+def load_user(user_id):
+    return User.get(user_id)
 
 
 def base_app():
@@ -88,8 +92,9 @@ def base_app():
         app.config.from_envvar('MEMBERDB_SETTINGS')
 
     from backend.models import Members
+    from flask.ext.restless import APIManager
     # Create the Flask-Restless API manager.
-    app.api_manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
+    app.api_manager = APIManager(app, flask_sqlalchemy_db=db)
     app.api_manager.create_api(
         Members,
         methods=['GET', 'POST', 'PATCH', 'DELETE'],
@@ -99,8 +104,10 @@ def base_app():
     return app
 
 
-def create_admin_views(app):
-    admin = Admin(app, name='MemberDBNG', template_mode='bootstrap3')
+def create_admin_views(my_app):
+    from backend import models
+
+    admin_app = Admin(my_app, name='MemberDBNG', template_mode='bootstrap3')
 
     for model in [
         models.Activities,
@@ -134,9 +141,9 @@ def create_admin_views(app):
         models.SystemMessages,
         models.Token,
     ]:
-        admin.add_view(ModelView(model, db.session))
+        admin_app.add_view(ModelView(model, db.session))
 
-    return admin
+    return admin_app
 
 
 def setup_logging(filename):    # pragma: no cover
@@ -176,6 +183,12 @@ def logout():
     return "You have been logged out"
 
 
+@app.route("/signed-up")
+def signed_up():
+    return (
+        "Thank you for signing up. You will receive an email confirmation soon"
+    )
+
 def main():  # pragma: no cover
     global app
 
@@ -205,6 +218,3 @@ def main():  # pragma: no cover
     import backend.views
 
     app.run(**runner_kw)
-
-
-

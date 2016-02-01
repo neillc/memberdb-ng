@@ -1,8 +1,8 @@
 <!-- extend from base layout -->
-{% extends "base.html" %}
+{% extends "layout.html" %}
 
 {% block content %}
-<h1>Sign In</h1>
+<h1>Sign Up</h1>
 <form action="" method="post" name="login">
   {{ form.hidden_tag() }}
   <p>
@@ -21,6 +21,110 @@
     {% endfor %}<br>
   </p>
 
-  <p><input type="submit" value="Sign In"></p>
+    <p>Please enter your first name:<br>
+      {{ form.first_name }}<br>
+    {% for error in form.first_name.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    </p>
+
+    <p>Please enter your middle name:<br>
+      {{ form.middle_name }}<br>
+    {% for error in form.middle_name.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    </p>
+
+
+    <p>Please enter your last name:<br>
+      {{ form.last_name }}<br>
+    {% for error in form.last_name.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    </p>
+
+
+    <p>Please enter your date of birth:<br>
+      {{ form.dob }}<br>
+    {% for error in form.dob.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    </p>
+
+
+    <p>Please enter your sex:<br>
+      {{ form.sex }}<br>
+    {% for error in form.sex.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    </p>
+
+
+    <p>Please enter the first line of your address:<br>
+      {{ form.address1 }}<br>
+    {% for error in form.address1.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    </p>
+
+
+    <p>Please enter the second line of your address:<br>
+      {{ form.address2 }}<br>
+    {% for error in form.address2.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    </p>
+
+
+    <p>Please enter your suburb:<br>
+      {{ form.suburb }}<br>
+    {% for error in form.suburb.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    </p>
+
+
+    <p>Please enter your postcode:<br>
+      {{ form.postcode }}<br>
+    {% for error in form.postcode.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    </p>
+
+
+    <p>Please enter your state:<br>
+      {{ form.state }}<br>
+    {% for error in form.state.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    </p>
+
+
+    <p>Please enter your country:<br>
+      {{ form.country }}<br>
+    {% for error in form.country.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    </p>
+
+
+    <p>Please enter your home phone number:<br>
+      {{ form.phone_home }}<br>
+    {% for error in form.phone_home.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    </p>
+
+
+    <p>Please enter your mobile phone number:<br>
+      {{ form.phone_mobile }}<br>
+    {% for error in form.phone_mobile.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}<br>
+    </p>
+
+
+
+  <p><input type="submit" value="Sign Up"></p>
 </form>
 {% endblock %}
