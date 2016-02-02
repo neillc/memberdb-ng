@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Date, DateTime, CHAR, Text, ForeignKey, PrimaryKeyConstraint
+from sqlalchemy import Column, Integer, String, DateTime, Text, \
+    ForeignKey, PrimaryKeyConstraint
 from backend import db
 
 
@@ -73,7 +74,7 @@ class OrganisationOrganisationTypes(db.Model):
     Maps types to orgs
     """
     __tablename__ = 'org_org_types'
-    __table_args__ = ((PrimaryKeyConstraint('org_id', 'org_type_id'),))
+    __table_args__ = (PrimaryKeyConstraint('org_id', 'org_type_id'),)
     org_id = Column(Integer, ForeignKey('orgs.id'))
     org_type_id = Column(Integer, ForeignKey('org_types.id'))
    
@@ -82,7 +83,8 @@ class OrganisationRelationTypes(db.Model):
     """
     -- Organization Relation (Types)
     -- -----------------------------
-    -- There are different types of relationships organizations can have with each other
+    -- There are different types of relationships organizations can have with
+    -- each other
     -- each org has its own set of relations (org_relation_types)
     -- This is useful for:
     --    - Keeping track of associate organizations
@@ -90,7 +92,7 @@ class OrganisationRelationTypes(db.Model):
     """
     __tablename__ = 'org_relation_types'
     
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, primary_key=True)
     org_id = Column(Integer, ForeignKey('orgs.id'), nullable=False)
     type = Column(String(50), nullable=False)
     description = Column(Text)
@@ -102,8 +104,14 @@ class OrganisationRelationships(db.Model):
     -- the lookup on the relation_type should be done on the org_id
     """
     __tablename__ = 'org_relations'
-    __table_args__ = ((PrimaryKeyConstraint('org_id','related_to_org_id','org_relation_type_id'),))
+    __table_args__ = (
+        PrimaryKeyConstraint(
+                'org_id',
+                'related_to_org_id',
+                'org_relation_type_id'
+        ),)
 
     org_id = Column(Integer, ForeignKey('orgs.id'), nullable=False)
     related_to_org_id = Column(Integer, ForeignKey('orgs.id'), nullable=False)
-    org_relation_type_id = Column(Integer, ForeignKey('org_relation_types.id'), nullable=False) 
+    org_relation_type_id = Column(Integer, ForeignKey('org_relation_types.id'),
+                                  nullable=False)

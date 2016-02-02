@@ -27,7 +27,6 @@ from flask_admin.contrib.sqla import ModelView
 
 from flask.ext.login import (
     login_required,
-    login_user,
     LoginManager,
     logout_user,
     UserMixin
@@ -51,9 +50,10 @@ class UserNotFoundError(Exception):
     pass
 
 
+# noinspection PyShadowingBuiltins
 class User(UserMixin):
 
-    def __init__(self, user_id):
+    def __init__(self, id):
         from backend.models.members import Members
         from sqlalchemy.orm.exc import NoResultFound
 
@@ -61,7 +61,7 @@ class User(UserMixin):
         self.email = None
 
         try:
-            member = Members.query.filter_by(id=user_id).one()
+            member = Members.query.filter_by(id=id).one()
             self.id = member.id
             self.email = member.email
         except NoResultFound:
@@ -188,6 +188,7 @@ def signed_up():
     return (
         "Thank you for signing up. You will receive an email confirmation soon"
     )
+
 
 def main():  # pragma: no cover
     global app

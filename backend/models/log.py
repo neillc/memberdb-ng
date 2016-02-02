@@ -8,8 +8,9 @@ class Log(db.Model):
         # -- ---
         # -- Keeps track of activities in the system
         # -- It is safe to delete records from this table at any time.
-        # -- it is used instead of a syslog facility to avoid the icky problems of
-        # -- having multiple threads/processes accessing the log file at once.
+        # -- it is used instead of a syslog facility to avoid the icky problems
+        # -- of having multiple threads/processes accessing the log file at
+        # -- once.
         # -- This way we just leave it up to a database issue :)
         # --
         # -- Priorities are (from UNIX syslog):

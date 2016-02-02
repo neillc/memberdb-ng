@@ -7,7 +7,9 @@ import backend.views.members
 
 
 from flask import render_template, flash, redirect
-from backend import app, db, User, login_user
+from flask_login import login_user
+
+from backend import app, db, User
 from backend.forms import LoginForm, SignupForm
 from backend.models.members import Members, OrgMembers, MemberTypes, Passwd
 from backend.models.orgs import Organisation
@@ -21,7 +23,7 @@ def login():
     if form.validate_on_submit():
         flash('Login requested for email="%s", password=%s' %
               (form.email.data, form.password.data))
-        user = User(form.email.data, form.password.data)
+        user = User(form.user_id)
         login_user(user)
         flash('Logged in successfully')
         return redirect('/')
@@ -49,8 +51,8 @@ def signup():
                 DOB=form.dob.data,
                 sex=form.sex.data,
                 address1=form.address1.data,
-                address2= form.address2.data,
-                suburb= form.suburb.data,
+                address2=form.address2.data,
+                suburb=form.suburb.data,
                 postcode=form.postcode.data,
                 state=form.state.data,
                 country=form.country.data,

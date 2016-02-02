@@ -68,6 +68,7 @@ class MembersOldDetails(db.Model):
 
 class MemberQualifications(db.Model):
     __tablename__ = 'member_qualifications'
+
     def __repr__(self):
         return "{name}({id}: {description}".format(
             id=self.id,
@@ -75,16 +76,21 @@ class MemberQualifications(db.Model):
             description=self.description
         )
 
-    member_id = Column(Integer, ForeignKey('members.id'), nullable=False, primary_key=True)
-    qualification_id = Column(Integer, ForeignKey('qualifications.id'), nullable=False, primary_key=True)
+    member_id = Column(Integer, ForeignKey('members.id'), nullable=False,
+                       primary_key=True)
+    qualification_id = Column(Integer, ForeignKey('qualifications.id'),
+                              nullable=False, primary_key=True)
     detail = Column(String(250), nullable=False)
 
 
 class OrgMembers(db.Model):
     __tablename__ = 'org_members'
-    member_id = Column(Integer, ForeignKey('members.id'), nullable=False, primary_key=True)
-    org_id = Column(Integer, ForeignKey('orgs.id'), nullable=False, primary_key=True)
-    member_type_id = Column(Integer, ForeignKey('member_types.id'), nullable=False)
+    member_id = Column(Integer, ForeignKey('members.id'),
+                       nullable=False, primary_key=True)
+    org_id = Column(Integer, ForeignKey('orgs.id'),
+                    nullable=False, primary_key=True)
+    member_type_id = Column(Integer, ForeignKey('member_types.id'),
+                            nullable=False)
     start_date = Column(DateTime, nullable=False)
     expiry = Column(DateTime)
 
@@ -162,7 +168,8 @@ class Permissions(db.Model):
         FOREIGN KEY (member_id) REFERENCES members (id),
         FOREIGN KEY (org_id) REFERENCES orgs (id)
     );
-    CREATE INDEX member_permissions_activity_id_fkey ON permissions (activity_id);
+    CREATE INDEX member_permissions_activity_id_fkey
+        ON permissions (activity_id);
     CREATE INDEX member_permissions_group_id_fkey ON permissions (group_id);
     CREATE INDEX member_permissions_member_id_fkey ON permissions (member_id);
     CREATE INDEX member_permissions_org_id_fkey ON permissions (org_id);

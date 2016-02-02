@@ -21,18 +21,15 @@ div.heading {
               border-top: 1px solid black;
               border-left: 1px solid black;
               border-right: 1px solid black;
-              padding-bottom: 0px;
+              padding-bottom: 0;
               padding-left: 0.2em;
               padding-right: 0.2em;
               margin-bottom: 0;
            }
 
 div.heading h1 {
-                 padding-top: 0;
-                 padding-left: 0.1em;
-                 padding-right: 0.1em;
-                 padding-bottom: 0.5em;
-                 margin-top: 0;
+    padding: 0 0.1em 0.5em;
+    margin-top: 0;
                  margin-bottom: 0;
                  }
 
@@ -43,6 +40,7 @@ div.mini-login { position: absolute;
                  font-size: small;
                  }
 
+/*noinspection CssFloatPxLength*/
 div.container {
              margin: 0;
              padding-top: 0.1px; /* gets around a epiphany bug */
@@ -116,7 +114,7 @@ div.stdform { float: left; }
 div.stdform h2 {
                  background-color: transparent;
                  margin: 1em 0 0.5em 0;
-                 font: normal lage 'Century Gothic', sans-serif;
+                 font: normal large 'Century Gothic', sans-serif;
                  }
 
 div.stdform form p { margin: 0 0 0.1em 1em;

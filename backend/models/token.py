@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Text, Integer
+from sqlalchemy import Column, String, Integer
 from backend import db
 
 

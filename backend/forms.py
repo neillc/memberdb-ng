@@ -11,7 +11,9 @@ from backend.models.members import Members
 class LoginForm(Form):
     email = StringField('email', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired()])
+    user_id = None
 
+    # noinspection PyMethodOverriding
     def validate(self):
         invalid_login = 'Email address or password invalid'
 
@@ -27,6 +29,9 @@ class LoginForm(Form):
             if password != hashed_pw:
                 self.email.errors.append(invalid_login)
                 return False
+
+            self.user_id = member.id
+
         except NoResultFound:
             self.email.errors.append(invalid_login)
 

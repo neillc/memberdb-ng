@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, \
+    UniqueConstraint
 from backend import db
 
 
@@ -49,11 +50,14 @@ class ElectionCandidate(db.Model):
             election_position_id INT NOT NULL,
             member_id INT NOT NULL,
             spiel LONGTEXT,
-            FOREIGN KEY (election_position_id) REFERENCES election_position (id),
+            FOREIGN KEY (election_position_id)
+                REFERENCES election_position (id),
             FOREIGN KEY (member_id) REFERENCES members (id)
         );
-        CREATE UNIQUE INDEX election_candidate_pkey ON election_candidate (election_position_id, member_id);
-        CREATE INDEX election_candidate_member_id ON election_candidate (member_id);
+        CREATE UNIQUE INDEX election_candidate_pkey ON election_candidate (
+            election_position_id, member_id);
+        CREATE INDEX election_candidate_member_id ON election_candidate (
+            member_id);
     """
 
     __tablename__ = 'election_candidate'
@@ -79,12 +83,15 @@ class ElectionCandidateNomination(db.Model):
             for_member_id INT NOT NULL,
             reason LONGTEXT,
             PRIMARY KEY (election_position_id, from_member_id, for_member_id),
-            FOREIGN KEY (election_position_id) REFERENCES election_position (id),
+            FOREIGN KEY (election_position_id)
+                REFERENCES election_position (id),
             FOREIGN KEY (for_member_id) REFERENCES members (id),
             FOREIGN KEY (from_member_id) REFERENCES members (id)
         );
-        CREATE INDEX nomination_for_member_id_fkey ON election_candidate_nomination (for_member_id);
-        CREATE INDEX nomination_from_member_id_fkey ON election_candidate_nomination (from_member_id);
+        CREATE INDEX nomination_for_member_id_fkey
+            ON election_candidate_nomination (for_member_id);
+        CREATE INDEX nomination_from_member_id_fkey
+            ON election_candidate_nomination (from_member_id);
     """
     __tablename__ = 'election_candidate_nomination'
     when_nominated = Column(DateTime, nullable=False)
@@ -112,7 +119,8 @@ class ElectionPosition(db.Model):
             description LONGTEXT,
             FOREIGN KEY (election_id) REFERENCES election (id)
         );
-        CREATE INDEX election_position_election_id_fkey ON election_position (election_id);
+        CREATE INDEX election_position_election_id_fkey
+            ON election_position (election_id);
     """
     __tablename__ = 'election_position'
     id = Column(Integer, nullable=False, primary_key=True)
@@ -133,10 +141,14 @@ class ElectionVote(db.Model):
             FOREIGN KEY (candidate_id) REFERENCES election_candidate (id),
             FOREIGN KEY (member_id) REFERENCES members (id)
         );
-        CREATE UNIQUE INDEX election_vote_uniq ON election_vote (member_id, candidate_id, preference);
-        CREATE INDEX election_vote_candidate_id_fkey ON election_vote (candidate_id);
+        CREATE UNIQUE INDEX election_vote_uniq
+            ON election_vote (member_id, candidate_id, preference);
+        CREATE INDEX election_vote_candidate_id_fkey
+            ON election_vote (candidate_id);
     """
     __tablename__ = 'election_vote'
-    member_id = Column(Integer, ForeignKey('members.id'), nullable=False, primary_key=True)
-    candidate_id = Column(Integer, ForeignKey('election_candidate.id'), nullable=False, primary_key=True)
+    member_id = Column(Integer, ForeignKey('members.id'),
+                       nullable=False, primary_key=True)
+    candidate_id = Column(Integer, ForeignKey('election_candidate.id'),
+                          nullable=False, primary_key=True)
     preference = Column(Integer, nullable=False, primary_key=True)

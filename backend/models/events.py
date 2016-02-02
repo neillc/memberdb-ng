@@ -74,7 +74,7 @@ class Events(db.Model):
     """
         # -- events table
         # -- ------------
-        # -- events are stored in the system independantly of orgs
+        # -- events are stored in the system independently of orgs
         # -- events have host orgs, listed in the event_host_orgs table
         # -- this is how we work out who is hosting an event/running it.
         # --

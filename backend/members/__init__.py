@@ -17,11 +17,18 @@
 # You should have received a copy of the GNU General Public License
 # along with memberdb.  If not, see <http://www.gnu.org/licenses/>.
 
-import functools
 import logging
 
-#from flask import has_request_context, Flask, abort, Response, request
-from 
+# from flask import has_request_context, Flask, abort, Response, request
+from flask import request
+from backend import app
+
+
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
 
 
 @app.route("/shutdown", methods=["POST"])   # pragma: no cover
