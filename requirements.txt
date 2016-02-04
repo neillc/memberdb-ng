@@ -5,3 +5,4 @@ Flask-Restless
 Flask-WTF
 mysql-connector-python
 Flask-Admin
+Flask-Mail

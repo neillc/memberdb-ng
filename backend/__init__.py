@@ -19,7 +19,6 @@
 
 import logging
 import argparse
-import os
 from flask import Flask, render_template  # , redirect, url_for, request, flash
 
 from flask_admin import Admin
@@ -33,6 +32,7 @@ from flask.ext.login import (
     )
 
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail
 # import backend.models
 
 
@@ -41,6 +41,7 @@ ALL_HTTP_METHODS = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 app = Flask('backend')
 db = None
 admin = None
+mail = None
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -84,12 +85,13 @@ def load_user(user_id):
 
 
 def base_app():
-    global app, db, admin
+    global app, db, admin, mail
     app.config.from_object('backend.settings')
     db = SQLAlchemy(app)
+    mail = Mail(app)
 
-    if 'MEMBERDB_SETTINGS' in os.environ:
-        app.config.from_envvar('MEMBERDB_SETTINGS')
+    # if 'MEMBERDB_SETTINGS' in os.environ:
+    #     app.config.from_envvar('MEMBERDB_SETTINGS')
 
     from backend.models import Members
     from flask.ext.restless import APIManager

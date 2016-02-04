@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in members %}
+        <tr>
+          <td>
+            {{ m.first_name }}
+            {{ m.middle_name }}
+            {{ m.last_name }}
+          </td>
+          <td>
+            <a href="{{ url_for('approve_member',id=m.id) }}">Approve</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+
+
+  </table>
+
+{% endblock %}

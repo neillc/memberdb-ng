@@ -1,0 +1,28 @@
+<!-- extend from base layout -->
+{% extends "layout.html" %}
+
+{% block content %}
+  <h1>Elections</h1>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Nominations</th>
+        <th>Voting</th>
+        <th>Results</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for election in elections %}
+        <tr>
+          <td>{{ election.name }}</td>
+          <td>{{ election.nominations_start.strftime('%x') }} to {{ election.nominations_close.strftime('%x') }}</td>
+          <td>{{ election.start_voting.strftime('%x') }} to {{ election.close_voting.strftime('%x') }}</td>
+          <td>{{ election.show_results.strftime('%x') }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

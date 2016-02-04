@@ -24,7 +24,7 @@ class Members(db.Model):
     phone_home = Column(String(25))
     phone_mobile = Column(String(25))
 
-    organisations = relationship('OrgMembers', backref='member')
+    organisations = relationship('OrgMembers')
     passwd = relationship('Passwd', backref='member')
 
     def __repr__(self):
@@ -85,14 +85,14 @@ class MemberQualifications(db.Model):
 
 class OrgMembers(db.Model):
     __tablename__ = 'org_members'
-    member_id = Column(Integer, ForeignKey('members.id'),
-                       nullable=False, primary_key=True)
-    org_id = Column(Integer, ForeignKey('orgs.id'),
+    member_id = db.Column(db.Integer, db.ForeignKey('members.id'),
+                          nullable=False, primary_key=True)
+    org_id = Column(db.Integer, db.ForeignKey('orgs.id'),
                     nullable=False, primary_key=True)
-    member_type_id = Column(Integer, ForeignKey('member_types.id'),
-                            nullable=False)
-    start_date = Column(DateTime, nullable=False)
-    expiry = Column(DateTime)
+    member_type_id = db.Column(db.Integer, db.ForeignKey('member_types.id'),
+                               nullable=False, primary_key=True)
+    start_date = db.Column(db.DateTime, nullable=False, primary_key=True)
+    expiry = db.Column(db.DateTime)
 
     def __repr__(self):
         return "Member:{member} Org:{org_id} Type:{type_id}".format(
@@ -121,11 +121,23 @@ class MemberTypes(db.Model):
     __tablename__ = 'member_types'
 
     id = Column(Integer, nullable=False, primary_key=True)
-    org_id = Column(Integer, ForeignKey('orgs.id'), nullable=False)
+    org_id = Column(Integer, db.ForeignKey('orgs.id'), nullable=False)
     type = Column(String(50), nullable=False)
     validates_membership = Column(Integer, nullable=False)
     revokes_membership = Column(Integer, nullable=False)
     description = Column(Text)
+
+    members = relationship('OrgMembers', backref='member_type')
+
+    def __repr__(self):
+        tpl = "MemberType:{id} Org:{org_id} Type:{type} Desc:{description}"
+        return tpl.format(
+            id=self.id,
+            org_id=self.org_id,
+            type=self.type,
+            description=self.description
+        )
+
 
 
 class Passwd(db.Model):

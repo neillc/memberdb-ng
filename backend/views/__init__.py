@@ -8,13 +8,16 @@ import backend.views.members
 
 from flask import render_template, flash, redirect
 from flask_login import login_user
+from flask_mail import Message
 
-from backend import app, db, User
+from backend import app, db, User, mail
 from backend.forms import LoginForm, SignupForm
 from backend.models.members import Members, OrgMembers, MemberTypes, Passwd
 from backend.models.orgs import Organisation
 
 # from backend.views.admin import members, orgs
+from backend.views.members import confirm_membership
+from backend.views.elections import elections
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -92,6 +95,23 @@ def signup():
 
         db.session.add(member)
         db.session.commit()
+
+        message_body = render_template(
+            'mail/request_for_confirmation.tpl',
+            member=member,
+            now=datetime.now().strftime('%c')
+        )
+        subject = "Please confirm your application for membership of " + \
+                  "{org_name}"
+
+        subject = subject.format(org_name='Linux Australia')
+        mail.send(
+            Message(
+                subject=subject,
+                body=message_body,
+                recipients=[member.email]
+            )
+        )
 
         return redirect('/signed-up')
     return render_template('signup.html',
