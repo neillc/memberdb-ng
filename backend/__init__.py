@@ -19,8 +19,7 @@
 
 import logging
 import argparse
-from flask import Flask, render_template  # , redirect, url_for, request, flash
-
+from flask import Flask
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
@@ -155,41 +154,6 @@ def setup_logging(filename):    # pragma: no cover
     logging.basicConfig(format=log_format, level=log_level, filename=filename)
     if filename:
         print('Logging to %s' % filename)
-
-
-@app.route("/")
-def index():
-    return render_template('index.html')
-
-
-# @app.route("/login", methods=["POST"])
-# def login():
-#     user = User.get(request.form['user'])
-#     if user and user.password == request.form['password']:
-#         login_user(user)
-#     else:
-#         flash('Username or password incorrect')
-#
-#     return redirect(url_for('index'))
-
-
-@app.route("/edit")
-@login_required
-def edit():
-    return 'You can edit your details here'
-
-
-@app.route("/logout")
-def logout():
-    logout_user()
-    return "You have been logged out"
-
-
-@app.route("/signed-up")
-def signed_up():
-    return (
-        "Thank you for signing up. You will receive an email confirmation soon"
-    )
 
 
 def main():  # pragma: no cover

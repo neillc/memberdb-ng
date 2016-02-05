@@ -9,6 +9,10 @@ import backend.views.members
 from flask import render_template, flash, redirect
 from flask_login import login_user
 from flask_mail import Message
+from flask.ext.login import (
+    login_required,
+    logout_user
+    )
 
 from backend import app, db, User, mail
 from backend.forms import LoginForm, SignupForm
@@ -18,6 +22,41 @@ from backend.models.orgs import Organisation
 # from backend.views.admin import members, orgs
 from backend.views.members import confirm_membership
 from backend.views.elections import elections
+
+@app.route("/")
+def index():
+    return render_template('index.html')
+
+
+# @app.route("/login", methods=["POST"])
+# def login():
+#     user = User.get(request.form['user'])
+#     if user and user.password == request.form['password']:
+#         login_user(user)
+#     else:
+#         flash('Username or password incorrect')
+#
+#     return redirect(url_for('index'))
+
+
+@app.route("/edit")
+@login_required
+def edit():
+    return 'You can edit your details here'
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return "You have been logged out"
+
+
+@app.route("/signed-up")
+def signed_up():
+    return (
+        "Thank you for signing up. You will receive an email confirmation soon"
+    )
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
