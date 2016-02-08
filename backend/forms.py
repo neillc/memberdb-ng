@@ -1,7 +1,7 @@
 from hashlib import md5
 
 from flask.ext.wtf import Form
-from wtforms import DateField, StringField, PasswordField
+from wtforms import DateField, StringField, PasswordField, HiddenField
 from wtforms.validators import DataRequired, Email, Length
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -34,6 +34,7 @@ class LoginForm(Form):
 
         except NoResultFound:
             self.email.errors.append(invalid_login)
+            return False
 
         return True
 
@@ -59,3 +60,39 @@ class SignupForm(Form):
     phone_home = StringField('phone_home')
     phone_mobile = StringField('phone_mobile')
 
+
+class ProfileForm(Form):
+    id = HiddenField('id')
+    email = StringField('email', validators=[DataRequired(), Email()])
+    password = PasswordField(
+        'password',
+    )
+    confirm_password = PasswordField(
+        'password',
+    )
+    first_name = StringField('first_name', validators=[DataRequired()])
+    middle_name = StringField('middle_name')
+    last_name = StringField('last_name', validators=[DataRequired()])
+    DOB = DateField('DOB')
+    sex = StringField('sex', validators=[DataRequired()])
+    address1 = StringField('address1', validators=[DataRequired()])
+    address2 = StringField('address2')
+    suburb = StringField('suburb', validators=[DataRequired()])
+    postcode = StringField('postcode', validators=[DataRequired()])
+    state = StringField('state', validators=[DataRequired()])
+    country = StringField('country', validators=[DataRequired()])
+    phone_home = StringField('phone_home')
+    phone_mobile = StringField('phone_mobile')
+
+    # noinspection PyMethodOverriding
+    def validate(self):
+        invalid_password = 'Password and Confirmation do not match'
+
+        if not Form.validate(self):
+            return False
+
+        if self.password.data != self.confirm_password.data:
+            self.password.errors.append(invalid_password)
+            return False
+
+        return True

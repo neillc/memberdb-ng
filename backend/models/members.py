@@ -27,6 +27,12 @@ class Members(db.Model):
     organisations = relationship('OrgMembers')
     passwd = relationship('Passwd', backref='member')
 
+    def display_name(self):
+        return "{first} {last}".format(
+                first=self.first_name,
+                last=self.last_name
+        )
+
     def __repr__(self):
         return "{first_name} {last_name}".format(
             first_name=self.first_name, last_name=self.last_name
@@ -193,10 +199,12 @@ class Permissions(db.Model):
     group_id = Column(Integer, ForeignKey('groups.id'), primary_key=True)
     org_id = Column(Integer, ForeignKey('orgs.id'), primary_key=True)
     activity_id = Column(
-        Integer, ForeignKey('activity.id'), nullable=False, primary_key=True
+        Integer, ForeignKey('activities.id'), nullable=False, primary_key=True
     )
     can_do = Column(Integer)
     can_grant = Column(Integer)
     start_datetime = Column(DateTime, nullable=False, primary_key=True)
     end_datetime = Column(DateTime, primary_key=True)
+
+    members = relationship('Members', backref='permissions')
 

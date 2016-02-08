@@ -1,7 +1,8 @@
 from datetime import datetime
-import json
-from flask import flash, redirect, render_template
+
+from flask import flash, redirect, render_template, request
 from flask_mail import Message
+from flask_login import login_required, current_user
 
 from backend import app, db, mail
 from backend.models import Members
@@ -46,14 +47,9 @@ def confirm_membership(id):
 
 @app.route('/approve-members')
 def approve_members():
-    # pending_member_type = MemberTypes.query.filter_by(description='Pending').one()
-
     pending_approval = Members.query.join(OrgMembers).\
         filter(OrgMembers.expiry is None).join(MemberTypes).\
         filter(MemberTypes.description == 'Pending').all()
-
-    for pa in pending_approval:
-        print(pa)
 
     return render_template('approve_members.html', members=pending_approval)
 
@@ -99,6 +95,74 @@ def approve_member(id):
     return redirect('/approve-members')
 
 
+@app.route('/profile', methods=['POST', 'GET'])
+@login_required
+def profile():
+    from hashlib import md5
+    import random
+    import string
+
+    from backend.forms import ProfileForm
+    from backend.models.members import Passwd
+
+    member = Members.query.get(current_user.id)
+    if request.method == 'POST':
+        form = ProfileForm(request.form)
+    else:
+        form = ProfileForm()
+        form.id.data = member.id
+        form.email.data = member.email
+        form.first_name.data = member.first_name
+        form.middle_name.data = member.middle_name
+        form.last_name.data = member.last_name
+        form.DOB.data = member.DOB
+        form.sex.data = member.sex
+        form.address1.data = member.address1
+        form.address2.data = member.address2
+        form.suburb.data = member.suburb
+        form.postcode.data = member.postcode
+        form.state.data = member.state
+        form.country.data = member.country
+        form.phone_home.data = member.phone_home
+        form.phone_mobile.data = member.phone_mobile
+
+    if request.method == 'POST' and form.validate_on_submit():
+        flash('Profile edited')
+
+        if form.id.data:
+            member = Members.query.get(form.id.data)
+        else:
+            member = Members()
+
+        member.first_name = form.first_name.data
+        member.middle_name = form.middle_name.data
+        member.last_name = form.last_name.data
+        member.DOB = form.DOB.data
+        member.sex = form.sex.data
+        member.address1 = form.address1.data
+        member.address2 = form.address2.data
+        member.suburb = form.suburb.data
+        member.postcode = form.postcode.data
+        member.state = form.state.data
+        member.country = form.country.data
+        member.email = form.email.data
+        member.phone_home = form.phone_home.data
+        member.phone_mobile = form.phone_mobile.data
+
+        if form.password.data:
+            salt = ''.join(random.SystemRandom().choice(
+                    string.ascii_uppercase + string.digits
+            ) for _ in range(5))
+            member.passwd[0].salt = salt
+            member.passwd[0].password = md5(
+                                    salt.encode() +
+                                    form.password.data.encode()
+                            ).hexdigest()
+
+
+        db.session.commit()
+
+    return render_template('profile.html', form=form)
 # @app.route('/members')
 # def index():
 #     members = []

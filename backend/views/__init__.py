@@ -19,24 +19,13 @@ from backend.forms import LoginForm, SignupForm
 from backend.models.members import Members, OrgMembers, MemberTypes, Passwd
 from backend.models.orgs import Organisation
 
-# from backend.views.admin import members, orgs
 from backend.views.members import confirm_membership
 from backend.views.elections import elections
+
 
 @app.route("/")
 def index():
     return render_template('index.html')
-
-
-# @app.route("/login", methods=["POST"])
-# def login():
-#     user = User.get(request.form['user'])
-#     if user and user.password == request.form['password']:
-#         login_user(user)
-#     else:
-#         flash('Username or password incorrect')
-#
-#     return redirect(url_for('index'))
 
 
 @app.route("/edit")
@@ -46,9 +35,10 @@ def edit():
 
 
 @app.route("/logout")
+@login_required
 def logout():
     logout_user()
-    return "You have been logged out"
+    return redirect("/")
 
 
 @app.route("/signed-up")
@@ -58,13 +48,10 @@ def signed_up():
     )
 
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        flash('Login requested for email="%s", password=%s' %
-              (form.email.data, form.password.data))
         user = User(form.user_id)
         login_user(user)
         flash('Logged in successfully')

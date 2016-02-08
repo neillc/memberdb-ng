@@ -3,16 +3,22 @@
 
   <div class="jumbotron">
     <h1>Welcome</h1>
-    <p class="lead">
-      Welcome to the Linux Australia Membership Database. If you are not already
-      a member please click the signup link to join, membership is free and open
-      to all!
-    </p>
-    <p>
-      <a class="btn btn-lg btn-success" href="/signup" role="button">
-        Sign up today
-      </a>
-    </p>
+    {% if current_user.is_authenticated() %}
+      <p class="lead">
+        Welcome back {{ current_user.member.display_name() }}!
+      </p>
+    {% else %}
+      <p class="lead">
+        Welcome to the Linux Australia Membership Database. If you are not already
+        a member please click the signup link to join, membership is free and open
+        to all!
+      </p>
+      <p>
+        <a class="btn btn-lg btn-success" href="/signup" role="button">
+          Sign up today
+        </a>
+      </p>
+    {% endif %}
   </div>
 
   <div class="row marketing">

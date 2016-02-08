@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy.orm import relationship
 from backend import db
 
 
@@ -20,5 +21,5 @@ class Activities(db.Model):
     activity = Column(String(100), nullable=False, unique=True)
     description = Column(Text)
 
-
+    activities = relationship('Permissions', backref='activity')
 

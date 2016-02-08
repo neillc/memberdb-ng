@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with memberdb.  If not, see <http://www.gnu.org/licenses/>.
 
+from datetime import datetime
+
 import logging
 import argparse
 from flask import Flask
@@ -24,15 +26,12 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
 from flask.ext.login import (
-    login_required,
     LoginManager,
-    logout_user,
     UserMixin
     )
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
-# import backend.models
 
 
 ALL_HTTP_METHODS = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS']
@@ -64,11 +63,28 @@ class User(UserMixin):
             member = Members.query.filter_by(id=id).one()
             self.id = member.id
             self.email = member.email
+            self.member = member
+
         except NoResultFound:
             pass
 
     def get_id(self):
         return self.id
+
+    def has_permission(self, permission):
+        has_perm = len(
+                [
+                    p for p in self.member.permissions
+                    if (
+                        p.activity.activity == 'admin' or
+                        p.activity.activity == permission
+                    )
+                    and p.start_datetime <= datetime.now()
+                    and p.end_datetime >= datetime.now()
+                 ]
+        )
+
+        return has_perm
 
     @classmethod
     def get(cls, user_id):
