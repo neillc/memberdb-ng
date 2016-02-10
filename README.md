@@ -19,8 +19,10 @@ Installation
 5. create a mysqldatabase using the schema in member_db_schema.sql
 6. populate the database  TODO: How?
 7. configure environment variables:
-###
+
+`
     SQLALCHEMY_DATABASE_URI - sqlalchemy connect string for the db
+    
       e.g. mysql+mysqlconnector://<user>:<password>@<ip>/<dbname>
     PORT                - port the server listens on. Defaults to 8531
     HOST                - host we run on. Defaults to 127.0.0.1
@@ -30,7 +32,5 @@ Installation
     MAIL_USERNAME       - username for mail server
     MAIL_PASSWORD       - password for mail server
     MAIL_DEFAULT_SENDER - default from addres for mail sent by app
-    
-    
 8. using your virtualenv:
    python main.py
